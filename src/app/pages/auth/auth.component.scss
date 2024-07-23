@@ -1,0 +1,8 @@
+section {
+  overflow: hidden;
+}
+
+input {
+  @apply size-24 m-2 bg-transparent border border-white border-solid text-white text-center text-[36px] focus:scale-[1.05] transition-transform duration-200
+    max-xl:size-[70px] max-xl:m-1;
+}

@@ -1,1 +1,18 @@
-<p>auth works!</p>
+<section class="h-[100dvh]">
+  <div class="h-full bg-section-dark-1 flex flex-col justify-center items-center gap-4">
+    <p class="text-[#AAAAAA] text-[clamp(16px,4vw,24px)] text-center px-2">El bloqueo está <span class="text-green-300">activado</span>.</p>
+    <p class="text-white text-[clamp(30px,2vw,48px)] font-semibold text-center px-2">Ingresa el PIN para acceder al contenido.</p>
+    <div class="flex mt-8 max-xl:mt-2">
+      <input type="password" maxlength="1" [(ngModel)]="password[0]" (input)="onInput(0, $event)" (keydown)="onKeydown(0, $event)" #input0 />
+      <input type="password" maxlength="1" [(ngModel)]="password[1]" (input)="onInput(1, $event)" (keydown)="onKeydown(1, $event)" #input1 />
+      <input type="password" maxlength="1" [(ngModel)]="password[2]" (input)="onInput(2, $event)" (keydown)="onKeydown(2, $event)" #input2 />
+      <input type="password" maxlength="1" [(ngModel)]="password[3]" (input)="onInput(3, $event)" (keydown)="onKeydown(3, $event)" #input3 />
+    </div>
+    <div class="flex">
+      <input type="password" maxlength="1" [(ngModel)]="password[4]" (input)="onInput(4, $event)" (keydown)="onKeydown(4, $event)" #input4 />
+      <input type="password" maxlength="1" [(ngModel)]="password[5]" (input)="onInput(5, $event)" (keydown)="onKeydown(5, $event)" #input5 />
+      <input type="password" maxlength="1" [(ngModel)]="password[6]" (input)="onInput(6, $event)" (keydown)="onKeydown(6, $event)" #input6 />
+      <input type="password" maxlength="1" [(ngModel)]="password[7]" (input)="onInput(7, $event)" (keydown)="onKeydown(7, $event)" #input7 />
+    </div>
+  </div>
+</section>
