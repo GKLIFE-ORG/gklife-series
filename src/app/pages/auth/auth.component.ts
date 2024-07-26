@@ -30,7 +30,6 @@ export class AuthComponent implements AfterViewInit {
 
   constructor(
     private router: Router,
-    private awnService: AwesomeNotificationsService,
     private authService: AuthService
   ) {}
 
@@ -46,7 +45,7 @@ export class AuthComponent implements AfterViewInit {
     }
 
     if (index === 7 && this.password.join('').length === 8) {
-      this.checkPassword();
+      this.login();
     }
   }
 
@@ -63,21 +62,40 @@ export class AuthComponent implements AfterViewInit {
     }
   }
 
-  async checkPassword(): Promise<void> {
-    const enteredPassword = this.password.join('');
-    const authRequest: AuthRequest = { pin: enteredPassword };
-    const isValidPin = await this.authService.verifyAuthentication(authRequest);
+  public async login() {
+    const authRequest: AuthRequest = {
+      username: 'globitokuki',
+      password: this.password.join(''),
+    };
 
-    if (isValidPin) {
-      this.awnService.success('Bienvenida!');
-      this.router.navigate(['/']);
-    } else {
-      this.awnService.alert('PIN inválido');
+    try {
+      const response = await this.authService.login(authRequest);
+      
+      if (response.isTokenValid && response.token) {
+        this.router.navigate(['/']);
+      }
+    } catch (error: any) {
       this.password = ['', '', '', '', '', '', '', ''];
       this.inputs.forEach((input) => (input.nativeElement.value = ''));
       this.inputs.first.nativeElement.focus();
     }
   }
+
+  // async checkPassword(): Promise<void> {
+  //   const enteredPassword = this.password.join('');
+  //   const authRequest: AuthRequest = { pin: enteredPassword };
+  //   const isValidPin = await this.authService.verifyAuthentication(authRequest);
+
+  //   if (isValidPin) {
+  //     this.awnService.success('Bienvenida!');
+  //     this.router.navigate(['/']);
+  //   } else {
+  //     this.awnService.alert('PIN inválido');
+  //     this.password = ['', '', '', '', '', '', '', ''];
+  //     this.inputs.forEach((input) => (input.nativeElement.value = ''));
+  //     this.inputs.first.nativeElement.focus();
+  //   }
+  // }
 
   preventFocusLoss(): void {
     document.addEventListener('click', (event) => {

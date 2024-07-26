@@ -5,17 +5,21 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "section-dark-0": "#040404",
-        "section-dark-1": "#121212",
+        "primary": "#47c9ff",
+        "section-dark-0": "#141414",
+        "section-dark-1": "#2D2F34",
         "section-dark-2": "#1d1d1d",
       },
       height: {
-        navbar: "80px",
+        navbar: "80px", // navbar height
       },
       spacing: {
-        navbar: "80px",
+        navbar: "80px", // top navbar
       },
-      fontFamily: {},
+      fontFamily: {
+        "oswald": ["Oswald", "sans-serif"],
+        "mulish": ["Mulish", "sans-serif"],
+      },
     },
   },
   plugins: [],

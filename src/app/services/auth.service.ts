@@ -2,29 +2,47 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthRequest, AuthResponse } from '../model/auth.model';
 import { environment } from '../../environments/environment';
+import { lastValueFrom } from 'rxjs';
+import { AwesomeNotificationsService } from './awesome-notifications.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private backendUrl = environment.BACKEND_URL;
+  private backendUrl = environment.BACKEND_URL + '/auth';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private awnService: AwesomeNotificationsService
+  ) {}
 
-  public async verifyAuthentication(authRequest: AuthRequest): Promise<boolean> {
+  public async login(authRequest: AuthRequest): Promise<AuthResponse> {
     try {
-      const response: AuthResponse | undefined = await this.http
-        .post<AuthResponse>(this.backendUrl + '/auth/verify', authRequest)
-        .toPromise();
-      if (response) {
-        localStorage.setItem('pin', authRequest.pin);
-        return response.isValidPin;
-      } else {
-        console.error('No hubo respuesta del servidor');
-        return false;
+      const response = await lastValueFrom(
+        this.http.post<AuthResponse>(`${this.backendUrl}/login`, authRequest)
+      );
+
+      if (response.token && response.message) {
+        localStorage.setItem('token', response.token);
+        this.awnService.success(response.message);
       }
+
+      return response;
     } catch (error: any) {
-      console.error('Error verificando el PIN', error);
+      this.awnService.alert(error.error.message);
+      throw error.error.message;
+    }
+  }
+
+  public async verify(token: string): Promise<boolean> {
+    try {
+      const response = await lastValueFrom(
+        this.http.post<AuthResponse>(`${this.backendUrl}/verify`, { token })
+      );
+
+      return response.isTokenValid || false;
+    } catch (error: any) {
+      console.error('Error verifying token:', error);
       return false;
     }
   }

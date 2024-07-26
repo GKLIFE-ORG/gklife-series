@@ -1,7 +1,10 @@
 export class AuthRequest {
-  public pin: string = '';
+  public username: string = '';
+  public password: string = '';
 }
 
 export class AuthResponse {
-  public isValidPin: boolean = false;
+  public message?: string = '';
+  public token?: string = '';
+  public isTokenValid?: boolean = false;
 }

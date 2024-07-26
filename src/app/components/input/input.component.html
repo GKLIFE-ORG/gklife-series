@@ -1,0 +1,15 @@
+<div
+  class="relative w-[350px]"
+  [ngClass]="{
+    'max-[400px]:w-[90vw]': type === 'default',
+    'max-xl:w-[450px] max-lg:w-[550px] max-md:w-[90vw]': type === 'search',
+  }"
+>
+  <input
+    type="text"
+    required=""
+    [placeholder]="placeholder"
+    class="input input-alt"
+  />
+  <span class="input-border input-border-alt"></span>
+</div>

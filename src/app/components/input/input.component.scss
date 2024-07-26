@@ -1,0 +1,39 @@
+.input {
+  color: #fff;
+  width: 100%;
+  padding-inline: 0.5em;
+  padding-block: 0.7em;
+  @apply bg-black bg-opacity-30 backdrop-blur-md border-[2px] border-solid border-[#44464a]
+    focus:outline-none;
+}
+
+.input-border {
+  position: absolute;
+  height: 2px;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  transform: scaleX(0%);
+  transition: transform 0.3s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+}
+
+.input:focus + .input-border {
+  transform: scaleX(100%);
+}
+
+.input-alt {
+  font-size: 15px;
+  padding-inline: 1em;
+  padding-block: 0.8em;
+}
+
+.input-border-alt {
+  height: 3px;
+  background: linear-gradient(90deg, #47c9ff 0%, #47c9ff 50%, #47c9ff 100%);
+  transition: transform 0.4s cubic-bezier(0.42, 0, 0.58, 1);
+}
+
+.input-alt:focus + .input-border-alt {
+  // transform: scaleX(98.6%);
+  transform: scaleX(100%);
+}

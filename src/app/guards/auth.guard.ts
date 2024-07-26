@@ -9,14 +9,15 @@ export class AuthGuard implements CanActivate {
   constructor(private router: Router, private authService: AuthService) {}
 
   async canActivate(): Promise<boolean> {
-    const pin = localStorage.getItem('pin');
-    if (!pin) {
+    
+    const token = localStorage.getItem('token');
+    if (!token) {
       this.router.navigate(['/auth']);
       return false;
     }
 
-    const isValidPin = await this.authService.verifyAuthentication({ pin });
-    if (isValidPin) {
+    const isValidToken = await this.authService.verify(token);
+    if (isValidToken) {
       return true;
     } else {
       this.router.navigate(['/auth']);

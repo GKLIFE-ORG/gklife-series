@@ -5,6 +5,8 @@ import { SeriesComponent } from './pages/series/series.component';
 import { GalleryComponent } from './pages/gallery/gallery.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AuthComponent } from './pages/auth/auth.component';
+import { PlaylistComponent } from './pages/playlist/playlist.component';
+import { CumComponent } from './pages/cum/cum.component';
 
 export const routes: Routes = [
   {
@@ -19,18 +21,33 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'chat',
-    component: ChatComponent,
-    canActivate: [AuthGuard],
-  },
-  {
     path: 'series',
     component: SeriesComponent,
     canActivate: [AuthGuard],
   },
   {
+    path: 'series/:serie-name',
+    component: PlaylistComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'series/:serie-name/:chapter-number',
+    component: PlaylistComponent,
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'galeria',
     component: GalleryComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'chat',
+    component: ChatComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'cum',
+    component: CumComponent,
     canActivate: [AuthGuard],
   },
   {

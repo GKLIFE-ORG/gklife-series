@@ -1,19 +1,25 @@
 
 <nav class="fixed z-10 h-navbar w-full px-[4.8rem] flex justify-center items-center
   bg-black bg-opacity-30 backdrop-blur-md
-  after:absolute after:top-navbar after:left-0 after:w-full after:h-[2px] after:content-[''] after:bg-[rgba(189,189,244,.1)]">
-  <ul class="w-full flex justify-center items-center gap-x-6 test font-semibold text-[14px] text-[#C1C2D9]">
-    <li class="cursor-pointer">
-      <a routerLink="inicio">Inicio</a>
+  after:absolute after:top-navbar after:left-0 after:w-full after:h-[2px] after:content-[''] after:bg-[hsla(0,0%,100%,0.11)]">
+  <ul class="w-full flex justify-center items-center gap-x-8 font-mulish font-[600] text-[14px] text-[#ffffff]">
+    <li class="h-navbar cursor-pointer hover:text-primary transition-colors duration-500">
+      <a class="h-navbar flex justify-center items-center" routerLink="/">Inicio</a>
     </li>
-    <li class="cursor-pointer">
-      <a routerLink="inicio">Chat</a>
+    <li class="h-navbar cursor-pointer hover:text-primary transition-colors duration-500 group">
+      <a class="h-navbar flex justify-center items-center" routerLink="/series">
+        <span class="mr-2">Series</span>
+        <i class="fa-solid fa-angle-down text-[10px] transition-transform duration-500 group-hover:rotate-180"></i>
+      </a>
     </li>
-    <li class="cursor-pointer">
-      <a routerLink="inicio">Series</a>
+    <li class="h-navbar cursor-pointer hover:text-primary transition-colors duration-500">
+      <a class="h-navbar flex justify-center items-center" routerLink="/galeria">Galeria</a>
     </li>
-    <li class="cursor-pointer">
-      <a routerLink="inicio">Galeria</a>
+    <li class="h-navbar cursor-pointer hover:text-primary transition-colors duration-500">
+      <a class="h-navbar flex justify-center items-center" routerLink="/chat">Chat</a>
+    </li>
+    <li class="h-navbar cursor-pointer hover:text-primary transition-colors duration-500">
+      <a class="h-navbar flex justify-center items-center" routerLink="/cum">Cumpleaños</a>
     </li>
   </ul>
 </nav>
