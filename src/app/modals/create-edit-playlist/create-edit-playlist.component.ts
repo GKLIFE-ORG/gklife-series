@@ -4,8 +4,8 @@ import { PlaylistService } from '../../services/playlist.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { InputComponent } from '../../components/input/input.component';
 import { StarsComponent } from '../../components/stars/stars.component';
+import { InputComponent } from '../../components/input/input.component';
 
 @Component({
   selector: 'app-create-edit-playlist',
