@@ -12,9 +12,7 @@ import { AwesomeNotificationsService } from './services/awesome-notifications.se
 export class AppComponent {
   title = 'GlobitoKuki';
 
-  constructor(
-    private awnService: AwesomeNotificationsService
-  ) {}
+  constructor(private awnService: AwesomeNotificationsService) {}
 
   ngOnInit() {
     this.awnService.configNotifications();

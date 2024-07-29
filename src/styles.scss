@@ -11,6 +11,11 @@
   box-sizing: border-box;
 }
 
+*,
+*:hover {
+  scrollbar-color: auto;
+}
+
 html {
   scroll-behavior: smooth;
 }

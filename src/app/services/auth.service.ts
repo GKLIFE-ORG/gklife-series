@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AuthRequest, AuthResponse } from '../model/auth.model';
+import { AuthRequest, AuthResponse } from '../models/auth.model';
 import { environment } from '../../environments/environment';
 import { lastValueFrom } from 'rxjs';
 import { AwesomeNotificationsService } from './awesome-notifications.service';

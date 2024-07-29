@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import AWN from 'awesome-notifications';
 import { AuthService } from '../../services/auth.service';
-import { AuthRequest } from '../../model/auth.model';
+import { AuthRequest } from '../../models/auth.model';
 import { AwesomeNotificationsService } from '../../services/awesome-notifications.service';
 
 @Component({

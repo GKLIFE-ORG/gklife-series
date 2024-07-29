@@ -1,7 +1,7 @@
 <section class="h-[100dvh]">
   <div class="h-full bg-section-dark-1 flex flex-col justify-center items-center">
-    <p class="text-[#AAAAAA] text-[clamp(16px,4vw,22px)] text-center px-2 mb-4">El bloqueo está <span class="text-green-300">activado</span>.</p>
-    <p class="text-white text-[clamp(30px,2vw,48px)] font-semibold text-center px-2 mb-4">Ingresa el PIN para acceder al contenido.</p>
+    <p class="text-[#AAAAAA] text-[clamp(16px,4vw,22px)] text-center px-2">El bloqueo está <span class="text-green-300">activado</span>.</p>
+    <p class="text-white text-[clamp(30px,2vw,48px)] font-semibold text-center px-2 my-4">Ingresa el PIN para acceder al contenido.</p>
     <div class="flex flex-wrap justify-center mt-8 max-xl:mt-2 px-4">
       <input type="password" maxlength="1" [(ngModel)]="password[0]" (input)="onInput(0, $event)" (keydown)="onKeydown(0, $event)" #input0 />
       <input type="password" maxlength="1" [(ngModel)]="password[1]" (input)="onInput(1, $event)" (keydown)="onKeydown(1, $event)" #input1 />

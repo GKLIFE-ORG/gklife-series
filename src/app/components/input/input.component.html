@@ -1,15 +1,59 @@
 <div
-  class="relative w-[350px]"
-  [ngClass]="{
-    'max-[400px]:w-[90vw]': type === 'default',
-    'max-xl:w-[450px] max-lg:w-[550px] max-md:w-[90vw]': type === 'search',
-  }"
+  class="relative"
 >
-  <input
-    type="text"
-    required=""
-    [placeholder]="placeholder"
-    class="input input-alt"
-  />
-  <span class="input-border input-border-alt"></span>
+  @if (type === 'file') {
+    <div class="h-full flex flex-col gap-1"
+      [ngClass]="{
+        '': styles === 'default',
+        '': styles === 'search',
+      }"
+    >
+      <!-- Etiqueta -->
+      @if (label && label !== '') {
+        <label [for]="inputId" class="block text-[15px] text-[#bcbec2] mb-1">{{ label }}</label>
+      }
+
+      <!-- Campo de entrada -->
+      <input type="file" [id]="inputId" class="block w-full text-sm border rounded-lg cursor-pointer text-gray-400 focus:outline-none bg-gray-700 border-gray-600 placeholder-gray-400 mb-4">
+    </div>
+  } @else {
+    <div class="h-full flex flex-col gap-1"
+      [ngClass]="{
+        '': styles === 'default',
+        '': styles === 'search',
+      }"
+    >
+      <!-- Etiqueta -->
+      @if (label && label !== '') {
+        <label [for]="inputId" class="block text-[15px] text-[#bcbec2]">{{ label }}</label>
+      }
+      <div class="relative">
+        <!-- Icono izquierdo -->
+        @if (iconLeft && iconLeft !== '') {
+          <i [ngClass]="iconLeft" class="text-[#7a7b7e] absolute z-10 left-[14px] top-1/2 transform -translate-y-1/2"></i>
+        }
+        <!-- Campo de entrada -->
+        <input
+          [id]="inputId"
+          [type]="type"
+          required=""
+          [placeholder]="placeholder"
+          [(ngModel)]="value"
+          (ngModelChange)="onChange($event)"
+          (blur)="onTouch()"
+          class="input input-alt"
+          [ngClass]="{
+            'input-alt-left': (iconLeft && iconLeft !== ''),
+            'input-alt-right': (iconRight && iconRight !== '')
+          }"
+        >
+        <!-- Icono derecho -->
+        @if (iconRight && iconRight !== '') {
+          <i [ngClass]="iconRight" class="text-[#7a7b7e] absolute z-10 right-[14px] top-1/2 transform -translate-y-1/2"></i>
+        }
+        <!-- Borde de entrada -->
+        <span class="input-border input-border-alt"></span>
+      </div>
+    </div>
+  }
 </div>

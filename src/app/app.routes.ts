@@ -6,7 +6,7 @@ import { GalleryComponent } from './pages/gallery/gallery.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AuthComponent } from './pages/auth/auth.component';
 import { PlaylistComponent } from './pages/playlist/playlist.component';
-import { CumComponent } from './pages/cum/cum.component';
+import { FechasComponent } from './pages/fechas/fechas.component';
 
 export const routes: Routes = [
   {
@@ -46,8 +46,8 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'cum',
-    component: CumComponent,
+    path: 'fechas',
+    component: FechasComponent,
     canActivate: [AuthGuard],
   },
   {

@@ -1,21 +1,16 @@
-// import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpInterceptorFn } from '@angular/common/http';
 
-// export const HttpInterceptor: HttpInterceptorFn = (req, next) => {
-//   // if (!req.url.includes('/data/')) {
-//   //   return next(req);
-//   // }
+export const HttpInterceptor: HttpInterceptorFn = (req, next) => {
+  const token = localStorage.getItem('token');
 
-//   // const token = localStorage.getItem('token');
+  if (!req.url.includes('/auth/') && token) {
+    const authReq = req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return next(authReq);
+  }
 
-//   // if (req.headers.get('No-Auth') === 'True') {
-//   //   return next(req);
-//   // }
-
-//   // const authReq = req.clone({
-//   //   setHeaders: {
-//   //     Authorization: `Bearer ${token}`,
-//   //   },
-//   // });
-
-//   return next(req);
-// };
+  return next(req);
+};

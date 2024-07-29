@@ -1,37 +1,19 @@
-body::-webkit-scrollbar {
+.has-scrollbar {
+  @apply overflow-y-auto;
+}
+
+.has-scrollbar::-webkit-scrollbar {
   @apply w-[10px];
 }
 
-body::-webkit-scrollbar-track {
+.has-scrollbar::-webkit-scrollbar-track {
   @apply bg-section-dark-1;
 }
 
 .has-scrollbar::-webkit-scrollbar-thumb {
-  @apply bg-primary rounded-[5px];
-}
-
-body::-webkit-scrollbar-thumb {
   @apply bg-[hsla(0,0%,100%,0.11)] border border-solid border-opacity-10 rounded-[10px] border-[#ffffff];
 }
 
-body::-webkit-scrollbar-thumb:hover {
+.has-scrollbar::-webkit-scrollbar-thumb:hover {
   @apply bg-[hsla(0,0%,100%,0.15)];
-}
-
-.has-scrollbar::-webkit-scrollbar {
-  @apply size-[5px];
-}
-
-.has-scrollbar::-webkit-scrollbar-track {
-  @apply bg-[hsl(240,1%,17%)] rounded-[5px];
-}
-
-.has-scrollbar::-webkit-scrollbar-button {
-  @apply w-[10px];
-}
-
-@media (min-width: 768px) {
-  .has-scrollbar::-webkit-scrollbar-button {
-    @apply w-[100px];
-  }
 }

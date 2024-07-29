@@ -1,15 +1,62 @@
 <app-navbar></app-navbar>
-<section class="min-h-dvh h-full bg-section-dark-1 py-[5%] px-[15%] max-xl:px-[10%] max-md:px-[5%] font-mulish">
+<section class="min-h-dvh h-auto bg-section-dark-1 py-[5%] px-[10%] max-2xl:px-[5%] max-md:px-[5%] font-mulish">
   <div class="pt-navbar flex flex-col items-center gap-10 max-sm:gap-5">
-    <app-input type="search" placeholder="Buscar..."></app-input>
-    <div class="flex flex-wrap gap-4">
-      <!-- <img class="w-[360px] grow h-[210px]" src="assets/series/boys-over-flowers.thumbmail.png" alt="">
-      <img class="w-[360px] grow h-[210px]" src="assets/series/i-can-hear-your-voice.thumbmail.png" alt="">
-      <img class="w-[360px] grow h-[210px]" src="assets/series/i-can-hear-your-voice.thumbmail.png" alt="">
-      <img class="w-[360px] grow h-[210px]" src="assets/series/i-can-hear-your-voice.thumbmail.png" alt="">
-      <img class="w-[360px] grow h-[210px]" src="assets/series/i-can-hear-your-voice.thumbmail.png" alt="">
-      <img class="w-[360px] grow h-[210px]" src="assets/series/i-can-hear-your-voice.thumbmail.png" alt=""> -->
+
+    <!-- Search Input -->
+    <app-input styles="search" iconLeft="fas fa-search" placeholder="Buscar..."></app-input>
+
+    <!-- Create Playlist -->
+    <button class="text-white" (click)="openCreateDialog()">Nueva Playlist</button>
+
+    <div class="w-full grid grid-cols-4 max-[1444px]:grid-cols-3 max-[1100px]:grid-cols-2 max-sm:grid-cols-1 gap-x-4 gap-y-6">
+      @for (playlist of playlists; track playlist.orderView) {
+        <div class="h-fit">
+          <div class="relative group">
+            <a [routerLink]="playlist.fullName" class="block w-full h-full cursor-pointer">
+              <!-- Image -->
+              <img class="w-full h-full rounded-md" [src]="getThumbnailImage(playlist.thumbnail || 'no-have-thumbmail')" alt="">
+              <!-- Number of Order View -->
+              <p class="absolute top-2 right-2 bg-black bg-opacity-50 rounded-md px-2 py-1 text-white text-[13px] font-mulish font-[600]">
+                @if (playlist.orderView) {
+                  {{ playlist.orderView }}
+                } @else {
+                  ?
+                }
+              </p>
+            </a>
+            <!-- Hover Image -->
+            <div class="absolute inset-0 z-10 bg-black bg-opacity-50 rounded-md flex justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+              <i class="fa-solid fa-play-circle text-white text-4xl"></i>
+              <!-- Options -->
+              <div class="absolute bottom-2 right-2 z-20 flex space-x-1">
+                <button class="btn-with-icon" (click)="openEditDialog(playlist)">
+                  <i class="fa-solid fa-edit"></i>
+                </button>
+                <button class="btn-with-icon" (click)="deletePlaylist(playlist.fullName)">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+                @if (playlist.playlistLink) {
+                  <a [href]="playlist.playlistLink" target="_blank" class="btn-with-icon yt">
+                    <i class="fa-brands fa-youtube"></i>
+                  </a>
+                }
+              </div>
+            </div>
+          </div>
+          @if (playlist.startViewingDate && playlist.endViewingDate) {
+            <div class="flex justify-between items-center text-gray-400 text-sm mt-2">
+              <p>{{ changeDateFormat(playlist.startViewingDate) }}</p>
+              <p>{{changeDateFormat(playlist.endViewingDate)}}</p>
+            </div>
+          } @else {
+            <p class="text-gray-400 text-sm mt-2">No hay fechas de visualización</p>
+          }
+          <p class="text-white">{{ playlist.realName }}</p>
+        </div>
+      }
     </div>
+    
+    
     <!-- <app-yt-video-embed ytId="qOncNX5Q4j0"></app-yt-video-embed> -->
   </div>
 </section>
