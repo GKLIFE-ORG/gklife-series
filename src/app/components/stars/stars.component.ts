@@ -14,6 +14,7 @@ export class StarsComponent {
   @Input() rating: number = 0;
   @Input() name: string = 'rating';
   @Input() label: string = '';
+  @Input() tabIndex!: number;
 
   @Output() ratingChange: EventEmitter<number> = new EventEmitter<number>();
 

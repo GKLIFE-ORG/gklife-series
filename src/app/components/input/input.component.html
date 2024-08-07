@@ -1,31 +1,72 @@
-<div
-  class="relative"
->
+<div class="relative">
   @if (type === 'file') {
-    <div class="h-full flex flex-col gap-1"
-      [ngClass]="{
-        'ccc': styles === 'default',
-        'ddd': styles === 'search',
-      }"
-    >
+    <div class="h-full flex flex-col gap-1">
       <!-- Etiqueta -->
       @if (label && label !== '') {
-        <label [for]="inputId" class="block text-[15px] text-[#bcbec2] mb-1">{{ label }}</label>
+        <div class="text-[15px] text-[#bcbec2] flex items-center gap-2">
+          <label [for]="inputId">{{ label }}</label>
+          @if (value && link) {
+            <a [href]="link" target="_blank">
+              <i class="fa-solid fa-up-right-from-square text-[10px] text-primary"></i>
+            </a>
+          }
+        </div>
       }
 
-      <!-- Campo de entrada -->
-      <input type="file" [id]="inputId" class="block w-full text-sm border rounded-lg cursor-pointer text-gray-400 focus:outline-none bg-gray-700 border-gray-600 placeholder-gray-400 mb-4">
+      <div class="relative">
+        <!-- Icono izquierdo -->
+        @if (iconLeft && iconLeft !== '') {
+          <i [ngClass]="iconLeft" class="text-[#7a7b7e] absolute z-10 left-[14px] top-1/2 transform -translate-y-1/2"></i>
+        }
+        <!-- Campo de entrada -->
+        <input [id]="inputId" type="file" [min]="min" [tabIndex]="tabIndex" class="input input-alt" [ngClass]="{'input-alt-left': (iconLeft && iconLeft !== '')}">
+      </div>
     </div>
-  } @else {
-    <div class="h-full flex flex-col gap-1"
-      [ngClass]="{
-        'aaa': styles === 'default',
-        'bbb': styles === 'search',
-      }"
-    >
+  
+  } @else if (type === 'select') {
+    <div class="h-full flex flex-col gap-1">
       <!-- Etiqueta -->
       @if (label && label !== '') {
-        <label [for]="inputId" class="block text-[15px] text-[#bcbec2]">{{ label }}</label>
+        <div class="text-[15px] text-[#bcbec2] flex items-center gap-2">
+          <label [for]="inputId">{{ label }}</label>
+          @if (value && link) {
+            <a [href]="link" target="_blank">
+              <i class="fa-solid fa-up-right-from-square text-[10px] text-primary"></i>
+            </a>
+          }
+        </div>
+      }
+
+      <div class="relative">
+        <!-- Icono izquierdo -->
+        @if (iconLeft && iconLeft !== '') {
+          <i [ngClass]="iconLeft" class="text-[#7a7b7e] absolute z-10 left-[14px] top-1/2 transform -translate-y-1/2"></i>
+        }
+        <!-- Selector -->
+        <select [id]="inputId" [tabIndex]="tabIndex" [(ngModel)]="value" (ngModelChange)="onChange($event)" class="input input-alt" [ngClass]="{'input-alt-left': (iconLeft && iconLeft !== '')}">
+          @for (option of options; track $index) {
+            <option [value]="option.key">{{ option.value }}</option>
+          }
+        </select>
+        <!-- Icono derecho -->
+        <i class="fa-solid fa-chevron-down text-[#7a7b7e] absolute z-10 right-[14px] top-1/2 transform -translate-y-1/2"></i>
+        <!-- Borde de entrada -->
+        <span class="input-border input-border-alt"></span>
+      </div>
+    </div>
+
+  } @else {
+    <div class="h-full flex flex-col gap-1">
+      <!-- Etiqueta -->
+      @if (label && label !== '') {
+        <div class="text-[15px] text-[#bcbec2] flex items-center gap-2">
+          <label [for]="inputId">{{ label }}</label>
+          @if (value && link) {
+            <a [href]="link" target="_blank">
+              <i class="fa-solid fa-up-right-from-square text-[10px] text-primary"></i>
+            </a>
+          }
+        </div>
       }
       <div class="relative">
         <!-- Icono izquierdo -->
@@ -36,7 +77,9 @@
         <input
           [id]="inputId"
           [type]="type"
+          [min]="min"
           required=""
+          [tabIndex]="tabIndex"
           [placeholder]="placeholder"
           [(ngModel)]="value"
           (ngModelChange)="onChange($event)"

@@ -5,17 +5,20 @@
 @tailwind components;
 @tailwind utilities;
 
+$backdrop-dialog: 0.70;
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-*,
-*:hover {
-  scrollbar-color: auto;
-}
-
-html {
   scroll-behavior: smooth;
+  scrollbar-color: auto;
+
+  &:hover {
+    scrollbar-color: auto;
+  }
+}
+
+.cdk-overlay-dark-backdrop {
+  background: rgba(0, 0, 0, $backdrop-dialog);
 }

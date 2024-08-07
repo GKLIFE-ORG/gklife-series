@@ -19,12 +19,15 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from '@angular/f
 export class InputComponent implements ControlValueAccessor {
   @Input() type!: string;
   @Input() styles!: string;
-
   @Input() placeholder!: string;
   @Input() iconLeft!: string;
   @Input() iconRight!: string;
   @Input() label!: string;
-  
+  @Input() tabIndex!: number;
+  @Input() min!: any;
+  @Input() options: { key: any, value: string }[] = [];
+  @Input() link!: string;
+
   value: any;
   inputId: string = 'input-' + Math.random().toString(36).substr(2, 9);
 

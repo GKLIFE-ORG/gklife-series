@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { PlaylistDTO } from '../models/serie.model';
+import { PlaylistDTO, StateEnum } from '../models/serie.model';
 import { AwesomeNotificationsService } from './awesome-notifications.service';
 import { catchError } from 'rxjs/internal/operators/catchError';
 import { tap } from 'rxjs/internal/operators/tap';
@@ -15,16 +15,26 @@ import { map } from 'rxjs/internal/operators/map';
 })
 export class PlaylistService {
   private backendUrl = environment.BACKEND_URL + '/series/playlist';
-  private playlistsSubject: BehaviorSubject<PlaylistDTO[]> =
-    new BehaviorSubject<PlaylistDTO[]>([]);
-  public playlists$: Observable<PlaylistDTO[]> =
-    this.playlistsSubject.asObservable();
+  // Lista de playlists
+  private playlistsSubject: BehaviorSubject<PlaylistDTO[]> = new BehaviorSubject<PlaylistDTO[]>([]);
+  public playlists$: Observable<PlaylistDTO[]> = this.playlistsSubject.asObservable();
+  // Playlist individual
+  private playlistSubject: BehaviorSubject<PlaylistDTO | null> = new BehaviorSubject<PlaylistDTO | null>(null);
+  public playlist$: Observable<PlaylistDTO | null> = this.playlistSubject.asObservable();
 
   constructor(
     private http: HttpClient,
     private awnService: AwesomeNotificationsService
   ) {
     this.loadPlaylists();
+  }
+
+  public refreshPlaylists() {
+    this.loadPlaylists();
+  }
+
+  public getAllPlaylists(): Observable<PlaylistDTO[]> {
+    return this.playlists$;
   }
 
   private loadPlaylists() {
@@ -40,12 +50,19 @@ export class PlaylistService {
       .subscribe();
   }
 
-  public refreshPlaylists() {
-    this.loadPlaylists();
-  }
-
-  public getAllPlaylists(): Observable<PlaylistDTO[]> {
-    return this.playlists$;
+  public getPlaylist(identifier: string): Observable<PlaylistDTO> {
+    return this.http
+      .get<PlaylistDTO>(`${this.backendUrl}/specific/${identifier}`)
+      .pipe(
+        tap((playlist) => {
+          this.playlistSubject.next(playlist);
+          console.log(playlist);
+        }),
+        catchError((error) => {
+          this.awnService.alert(error.error.message);
+          throw error;
+        })
+      );
   }
 
   public createPlaylist(
@@ -93,7 +110,10 @@ export class PlaylistService {
     return this.http
       .put(`${this.backendUrl}/update?identifier=${identifier}`, formData)
       .pipe(
-        tap(() => this.refreshPlaylists()),
+        tap(() => {
+          this.refreshPlaylists();
+          this.playlistSubject.next(playlistDTO);
+        }),
         map((response: any) => {
           this.awnService.success(
             response.message || 'Playlist actualizada correctamente'
@@ -108,11 +128,38 @@ export class PlaylistService {
       );
   }
 
+  public updatePlaylistState(identifier: string, state: string): Observable<any> {
+    console.log(identifier, state);
+    return this.http
+      .put(`${this.backendUrl}/update/state`, null, {
+        params: {
+          identifier,
+          state,
+        }
+      })
+      .pipe(
+        tap(() => this.refreshPlaylists()),
+        map((response: any) => {
+          this.awnService.info(
+            response.message || 'Estado actualizado'
+          );
+          return response;
+        }),
+        catchError((error) => {
+          this.awnService.alert(error.error.message);
+          throw error;
+        })
+      );
+  }
+
   public deletePlaylist(identifier: string): Observable<any> {
     return this.http
       .delete(`${this.backendUrl}/delete?identifier=${identifier}`)
       .pipe(
-        tap(() => this.refreshPlaylists()),
+        tap(() => {
+          this.refreshPlaylists();
+          this.playlistSubject.next(null);
+        }),
         map((response: any) => {
           this.awnService.success(
             response.message || 'Playlist deleted successfully'

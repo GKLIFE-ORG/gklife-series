@@ -7,6 +7,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { AuthComponent } from './pages/auth/auth.component';
 import { PlaylistComponent } from './pages/playlist/playlist.component';
 import { FechasComponent } from './pages/fechas/fechas.component';
+import { ChapterComponent } from './pages/chapter/chapter.component';
 
 export const routes: Routes = [
   {
@@ -26,13 +27,18 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'series/nueva',
+    component: SeriesComponent,
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'series/:serie-name',
     component: PlaylistComponent,
     canActivate: [AuthGuard],
   },
   {
     path: 'series/:serie-name/:chapter-number',
-    component: PlaylistComponent,
+    component: ChapterComponent,
     canActivate: [AuthGuard],
   },
   {

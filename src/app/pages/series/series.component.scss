@@ -1,16 +1,4 @@
 .btn-with-icon {
   @apply text-white bg-black bg-opacity-50 rounded-md size-8 text-[13px] font-mulish font-[600] pointer-events-auto grid place-items-center
    hover:text-black hover:bg-white transition-colors duration-300 ease-in-out;
-
-  // &.edit {
-  //   @apply hover:text-black hover:bg-yellow-200;
-  // }
-
-  // &.trash {
-  //   @apply hover:text-black hover:bg-red-400;
-  // }
-
-  // &.yt {
-  //   @apply hover:text-black hover:bg-white;
-  // }
 }

@@ -1,59 +1,176 @@
-<div class="has-scrollbar h-auto bg-section-dark-1 flex flex-col gap-8 items-center font-mulish py-12">
-
+<div #scrollContainer class="has-scrollbar h-auto bg-section-dark-1 text-white font-mulish">
+  
   <!-- Título -->
-  <h1 class="text-white font-bold text-[24px]">
-    <span *ngIf="isEdit">{{ playlistDTO.realName }} <span class="text-[18px] font-[500] text-primary">(editar)</span></span>
-    <span *ngIf="!isEdit">Nueva Playlist</span>
+  <h1 class="w-full text-center text-[24px] max-md:text-[22px] max-sm:text-[20px] font-bold mt-8 mb-4 px-4">
+    @if (isEdit) {
+      {{ playlistDTO.realName }} <span class="text-[18px] font-[500] text-primary">(editar)</span>
+    } @else {
+      Nueva Playlist
+    }
   </h1>
 
-  <!-- Formulario -->
-  <div mat-dialog-content class="w-full h-full">
-    <form (ngSubmit)="onSubmit()" class="h-full grid grid-cols-2 items-start justify-between px-9 gap-8">
-      
+  <!-- Separador -->
+  <span class="block w-full h-[2px] bg-dark-tertiary my-8"></span>
+  
+  <!-- Automatización -->
+  <div (ngSubmit)="onAutomatizate()" class="px-8 max-[444px]:px-6">
+    
+    <!-- Título de Sección -->
+    <h2 class="text-[20px] max-md:text-[18px] font-semibold m-0 pb-6">Automatización</h2>
+
+    <!-- Información -->
+    <div class="w-full flex justify-center items-end gap-2">
       <!-- Nombre real -->
-      <app-input [(ngModel)]="playlistDTO.realName" name="realName" label="Nombre real" iconLeft="fas fa-search" placeholder="Nombre Real de la Serie"></app-input>
-      
-      <!-- Nombre completo -->
-      <app-input [(ngModel)]="playlistDTO.fullName" name="fullName" label="Nombre completo" iconLeft="fas fa-search" placeholder="nombre-real-de-la-serie"></app-input>
+      <app-input class="w-full" [(ngModel)]="playlistDTO.playlistLink" [tabIndex]="1" name="playlistLink" label="Link de la playlist en YouTube"
+        iconLeft="fa-brands fa-youtube" placeholder="Aproximadamente 20 segundos...">
+      </app-input>
+    
+      <button (click)="onAutomatizate()" class="size-12 bg-dark-secondary border-2 border-solid border-dark-tertiary
+        group flex-shrink-0 flex-grow-0 basis-auto" [tabIndex]="2">
+        <i class="fa-solid fa-hammer transition-all duration-500 ease-in-out group-hover:text-primary"></i>
+      </button>
+    </div>
 
-      <!-- Nombre corto -->
-      <app-input [(ngModel)]="playlistDTO.shortName" name="shortName" label="Nombre corto" iconLeft="fas fa-search" placeholder="nrdls"></app-input>
-
-      <!-- Estrellas Globito -->
-      <app-stars [starCount]="5" [rating]="playlistDTO.starsGlobito!" name="rating-globito" label="Puntuación Globito" (ratingChange)="onRatingGlobitoChange($event)"></app-stars>
-      <app-stars [starCount]="5" [rating]="playlistDTO.starsKuki!" name="rating-kuki" label="Puntuación Kuki" (ratingChange)="onRatingKukiChange($event)"></app-stars>
-      
-      <!-- Imagen -->
-      <app-input type="file" (change)="onFileSelected($event)" name="image" label="Imagen de portada" iconLeft="fa-solid fa-image" placeholder="Seleccionar imagen"></app-input>
-      <!-- <input type="file" (change)="onFileSelected($event)" name="image" class="block w-full text-sm border rounded-lg cursor-pointer text-gray-400 focus:outline-none bg-gray-700 border-gray-600 placeholder-gray-400 mb-4"> -->
-
-      <!-- <div class="flex items-center justify-center w-full">
-        <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer bg-gray-700 border-gray-600 hover:border-gray-500 hover:bg-gray-600">
-            <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                <svg class="w-8 h-8 mb-4 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                </svg>
-                <p class="mb-2 text-sm text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                <p class="text-xs text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-            </div>
-            <input id="dropzone-file" type="file" class="hidden" />
-        </label>
-      </div>  -->
-
-
-      <!-- <input type="file" (change)="onFileSelected($event)" name="image" class="block w-full text-sm border rounded-lg cursor-pointer text-gray-400 focus:outline-none bg-gray-700 border-gray-600 placeholder-gray-400 mb-4"> -->
-      
-      <!-- Botones -->
-      <div class="w-full flex justify-center items-center gap-4">
-        <button class="px-4 py-2 bg-primary text-[#222222] text-[15px] font-bold rounded-md" type="submit">{{ isEdit ? 'Actualizar' : 'Crear' }}</button>
-        <button class="px-4 py-2 bg-red-400 text-[#222222] text-[15px] font-bold rounded-md" type="button" (click)="onNoClick()">Cancelar</button>
-      </div>
-    </form>
   </div>
 
-  <!-- Botones -->
-  <!-- <div class="w-full flex justify-center items-center gap-4">
-    <button class="px-4 py-2 bg-primary text-[#222222] text-[15px] font-bold rounded-md" type="submit">{{ isEdit ? 'Actualizar' : 'Crear' }}</button>
-    <button class="px-4 py-2 bg-red-400 text-[#222222] text-[15px] font-bold rounded-md" type="button" (click)="onNoClick()">Cancelar</button>
-  </div> -->
+  <!-- Separador -->
+  <span class="block w-full h-[2px] bg-dark-tertiary my-8"></span>
+
+  <!-- Formulario -->
+  <form (ngSubmit)="onSubmit()" class="w-[-webkit-fill-available] h-full">
+    
+    <!-- Título de Sección -->
+    <h2 class="text-[20px] max-md:text-[18px] font-semibold m-0 px-8 max-[444px]:px-6 pb-6">Información</h2>
+
+    <!-- Información -->
+    <div class="grid grid-cols-2 max-md:grid-cols-1 items-start justify-between gap-8 gap-y-6 max-md:gap-4 px-8 max-[444px]:px-6">
+      <!-- Nombre real -->
+      <app-input [(ngModel)]="playlistDTO.realName" (ngModelChange)="onRealNameChange($event, 'realName')"  [tabIndex]="3"
+        name="realName" label="Nombre real" iconLeft="fas fa-heading" placeholder="Nombre Real de la Serie">
+      </app-input>
+      
+      <!-- Nombre completo -->
+      <app-input [(ngModel)]="playlistDTO.fullName" (ngModelChange)="onRealNameChange($event, 'fullName')" 
+        name="fullName" label="Nombre completo" iconLeft="fas fa-font" placeholder="nombre-real-de-la-serie" [tabIndex]="4">
+      </app-input>
+
+      <!-- Nombre corto -->
+      <app-input [(ngModel)]="playlistDTO.shortName"
+        name="shortName" label="Nombre corto" iconLeft="fas fa-tag" placeholder="nrdls" [tabIndex]="5">
+      </app-input>
+
+      <!-- Orden de Visualización -->
+      <app-input [(ngModel)]="playlistDTO.orderView" type="number" [min]="1"
+        name="orderView" label="Orden de visualización" iconLeft="fas fa-sort-numeric-down" placeholder="1" [tabIndex]="6">
+      </app-input>
+
+      <!-- Estado -->
+      <app-input [(ngModel)]="playlistDTO.state" name="state" label="Estado" iconLeft="fas fa-toggle-on" placeholder="Visto" [tabIndex]="7"
+        type="select" [options]="stateOptions">
+      </app-input>
+
+      <!-- Nuestro Comentario -->
+      <app-input [(ngModel)]="playlistDTO.ourComment"
+        name="ourComment" label="Nuestro comentario" iconLeft="fas fa-comment" placeholder="Sonrisa de pato..." [tabIndex]="8">
+      </app-input>
+
+      <!-- Imagen -->
+      <app-input (change)="onFileSelected($event)" class="col-span-2 max-md:col-span-1"
+        type="file" name="image" label="Imagen de portada" iconLeft="fa-solid fa-image" placeholder="Seleccionar imagen" [tabIndex]="9">
+      </app-input>
+
+      <!-- Fecha de Inicio -->
+      <app-input [(ngModel)]="playlistDTO.startViewingDate"
+        name="startViewingDate" label="Fecha de inicio" iconLeft="fas fa-calendar-alt" placeholder="22/06/2024" [tabIndex]="10">
+      </app-input>
+
+      <!-- Fecha de Finalización -->
+      <app-input [(ngModel)]="playlistDTO.endViewingDate"
+        name="endViewingDate" label="Fecha de finalización" iconLeft="fas fa-calendar-check" placeholder="09/07/2024" [tabIndex]="11">
+      </app-input>
+
+      <!-- Descripción de la Serie -->
+      <app-input [(ngModel)]="playlistDTO.description" type="textarea"
+        name="description" label="Descripción de la serie" iconLeft="fas fa-align-left" placeholder="La serie trata de..." [tabIndex]="12">
+      </app-input>
+
+      <!-- Link de YT de la Playlist -->
+      <app-input [(ngModel)]="playlistDTO.playlistLink"
+        name="playlistLink" label="Link de la playlist en YouTube" iconLeft="fa-brands fa-youtube" placeholder="https://youtube.com/" [tabIndex]="13">
+      </app-input>
+
+      <!-- Estrellas Globito -->
+      <div class="w-full flex flex-wrap justify-center max-md:justify-around gap-8 max-md:gap-4 col-span-2 max-md:col-span-1">
+        <app-stars (ratingChange)="onRatingGlobitoChange($event)" [starCount]="5" [rating]="playlistDTO.starsGlobito!" [tabIndex]="14"
+          name="rating-globito" label="Globito" class="h-[74.5px]">
+        </app-stars>
+        <app-stars (ratingChange)="onRatingKukiChange($event)" [starCount]="5" [rating]="playlistDTO.starsKuki!" [tabIndex]="15"
+          name="rating-kuki" label="Kuki" class="h-[74.5px]">
+        </app-stars>
+      </div>
+    </div>
+
+    <!-- Separador -->
+    <span class="block w-full h-[2px] bg-dark-tertiary my-8"></span>
+
+    <!-- Título de Sección -->
+    <h2 class="text-[20px] font-semibold m-0 px-8 max-[444px]:px-6 pb-6">Capítulos</h2>
+
+    <!-- Capítulos -->
+    <div class="px-8 max-[444px]:px-6 flex flex-col gap-2 text-[15px]">
+      @if (localChapters.length > 0) {
+        @for (chapter of localChapters; track $index) {
+          <div class="w-full flex justify-center items-end gap-2">
+            <app-input class="w-full" [(ngModel)]="chapter.ytId" [ngModelOptions]="{standalone: true}" link="https://youtube.com/watch?v={{chapter.ytId}}"
+              [tabIndex]="16 + $index" label="Capítulo {{chapter.chapterNumber}}" [name]="chapter.ytId!" iconLeft="fa-brands fa-youtube" placeholder="ID del capítulo en YouTube">
+            </app-input>
+            <app-input-time [(ngModel)]="chapter.totalTime" [ngModelOptions]="{standalone: true}" name="totalTime" placeholder="--:--" class="w-[100px]">
+            </app-input-time>
+            @if ($index + 1 === localChapters.length && showRemoveButton) {
+              <button (click)="removeChapter($index, 'existing')" class="size-12 bg-dark-secondary border-2 border-solid border-dark-tertiary
+                group flex-shrink-0 flex-grow-0 basis-auto" [tabIndex]="17 + $index">
+                <i class="fa-solid fa-trash transition-all duration-500 ease-in-out group-hover:text-red-400"></i>
+              </button>
+            }
+          </div>
+        }
+      }
+      <!-- Nuevo Capítulo -->
+      @for (newChapter of newChapters; track $index) {
+        <div class="w-full flex justify-center items-end gap-2">
+          <app-input class="w-full" [(ngModel)]="newChapter.ytId" [ngModelOptions]="{standalone: true}"
+            [name]="newChapter.ytId!" label="Capítulo {{newChapter.chapterNumber}}" iconLeft="fa-brands fa-youtube" placeholder="ID del capítulo en YouTube">
+          </app-input>
+          <app-input-time [(ngModel)]="newChapter.totalTime" [ngModelOptions]="{standalone: true}" name="totalTime" placeholder="--:--:--" class="w-[100px]">
+          </app-input-time>
+          @if ($index + 1 === newChapters.length) {
+            <button (click)="removeChapter($index, 'new')" class="size-12 bg-dark-secondary border-2 border-solid border-dark-tertiary
+              group flex-shrink-0 flex-grow-0 basis-auto">
+              <i class="fa-solid fa-trash transition-all duration-500 ease-in-out group-hover:text-red-400"></i>
+            </button>
+          }
+        </div>
+      }
+      <button (click)="addNewChapterField()" [tabIndex]="999" type="button" class="w-full h-10 bg-dark-secondary rounded-md cursor-pointer flex justify-center items-center transition-all duration-500 ease-out group mt-2">
+        <i class="fa-solid fa-plus text-primary transition-transform duration-500 ease-in-out group-hover:rotate-180 animate-pulse"></i>
+      </button>
+    </div>
+
+    <!-- Separador -->
+    <span class="block w-full h-[2px] bg-dark-tertiary my-8"></span>
+
+    <!-- Botones -->
+    <div class="w-full flex justify-center items-center gap-4 p-8 pt-0 pb-12 max-[444px]:p-6 max-[444px]:pt-0 max-[444px]:pb-10 text-[15px] text-white col-span-2 max-md:col-span-1">
+      <button [tabIndex]="1000" class="px-3 py-1 bg-primary rounded-sm hover:bg-blue-300 transition-colors duration-500 ease-in-out" type="submit">
+        <i [ngClass]="{
+          'fa fa-refresh': isEdit,
+          'fa-solid fa-square-plus': !isEdit
+        }" class="mr-1"></i> {{ isEdit ? 'Actualizar' : 'Crear' }}
+      </button>
+      <button [tabIndex]="1001" class="px-3 py-1 bg-red-400 rounded-sm hover:bg-red-500 transition-colors duration-500 ease-in-out" type="button" (click)="onNoClick()">
+        <i class="fa-solid fa-xmark mr-1"></i> Cancelar
+      </button>
+    </div>
+
+  </form>
 </div>

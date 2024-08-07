@@ -1,6 +1,187 @@
 <app-navbar></app-navbar>
-<section class="min-h-dvh h-full bg-section-dark-1 text-white py-[5%] px-[15%] max-xl:px-[10%] max-md:px-[5%] font-mulish">
-  <div class="pt-navbar flex flex-col items-center gap-10 max-sm:gap-5">
-    <p>playlist works!</p>
-  </div>
+<section class="min-h-dvh h-auto bg-section-dark-1 py-[3.5%] max-lg:py-[5%] px-[10%] max-2xl:px-[5%] max-md:px-[5%] font-mulish">
+  @defer(when !isLoading) {
+    <div class="pt-navbar text-white w-full flex flex-col items-center">
+
+      <h1 class="w-full text-[24px] font-semibold text-center mb-10 max-md:mb-6">
+        {{ playlist.realName }}
+      </h1>
+  
+      <div class="flex justify-center gap-12 max-md:gap-8 flex-wrap">
+        <div class="w-full h-full max-w-[450px] max-xl:max-w-[350px] max-md:max-w-[450px] relative aspec-video">
+  
+          <div class="relative size-full">
+            <img class="w-full h-full max-w-[450px] object-cover rounded-md" [src]="getThumbnailImage(playlist.thumbnail || 'no-have-thumbmail')" alt="">
+            
+            <!-- Opciones -->
+            <div class="absolute bottom-2 right-2 z-20 flex space-x-1">
+              <button class="btn-with-icon" (click)="updatePlaylistState(playlist)">
+                @if (playlist.state === 'WATCHED') {
+                  <i class="fa-solid fa-eye"></i>
+                } @else if (playlist.state === 'WATCHING') {
+                  <i class="fa-solid fa-eye"></i>
+                } @else if (playlist.state == 'NOT_WATCHED') {
+                  <i class="fa-solid fa-eye-slash"></i>
+                }
+              </button>
+              <button class="btn-with-icon" (click)="openEditDialog(playlist)">
+                <i class="fa-solid fa-edit"></i>
+              </button>
+              <button class="btn-with-icon" (click)="deletePlaylist(playlist.fullName)">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+              @if (playlist.playlistLink) {
+                <a [href]="playlist.playlistLink" target="_blank" class="btn-with-icon yt">
+                  <i class="fa-brands fa-youtube"></i>
+                </a>
+              }
+            </div>
+          </div>
+
+          @if (playlist.startViewingDate && playlist.endViewingDate) {
+            <div class="flex justify-between items-center mt-2 text-[16px] max-sm:text-[14px]">
+              <div class="flex flex-col">
+                <p class="text-[#868e96]">Fecha de inicio</p>
+                <p class="text-white">{{ playlist.startViewingDate }}</p>
+              </div>
+              <div class="flex flex-col">
+                <p class="text-[#868e96]">Fecha de fin</p>
+                <p class="text-white">{{ playlist.endViewingDate }}</p>
+              </div>
+            </div>
+          }
+          
+          <!-- View -->
+          <!-- <div class="btn-with-icon absolute top-0 right-0 z-30 space-x-1 !rounded-br-none !rounded-tl-none hover:!bg-black hover:!bg-opacity-50">
+            @if (playlist.state === 'WATCHED') {
+              <i class="fa-solid fa-eye text-green-400"></i>
+            } @else if (playlist.state === 'WATCHING') {
+              <i class="fa-solid fa-eye text-yellow-200"></i>
+            } @else if (playlist.state == 'NOT_WATCHED') {
+              <i class="fa-solid fa-eye-slash text-red-400"></i>
+            }
+          </div> -->
+        </div>
+    
+        <div class="flex flex-col gap-2 text-[16px] max-xl:text-[15px] max-sm:w-full">
+          @if (playlist.fullName) {
+            <div class="flex flex-wrap max-sm:flex-col">
+              <p class="text-[#868e96] w-[180px] flex m-0">Nombre completo
+                <span class="max-sm:hidden">:</span>
+              </p>
+              <p class="text-white max-w-[400px]">{{ playlist.fullName }}</p>
+            </div>
+          }
+          @if (playlist.shortName) {
+            <div class="flex flex-wrap max-sm:flex-col">
+              <p class="text-[#868e96] w-[180px] flex m-0">Nombre corto
+                <span class="max-sm:hidden">:</span>
+              </p>
+              <p class="text-white max-w-[400px]">{{ playlist.shortName }}</p>
+            </div>
+          }
+          @if (playlist.orderView) {
+            <div class="flex flex-wrap max-sm:flex-col">
+              <p class="text-[#868e96] w-[180px] flex m-0">Número de orden
+                <span class="max-sm:hidden">:</span>
+              </p>
+              <p class="text-white max-w-[400px]">{{ playlist.orderView }}</p>
+            </div>
+          }
+          @if (playlist.state) {
+            <div class="flex flex-wrap max-sm:flex-col">
+              <p class="text-[#868e96] w-[180px] flex m-0">Estado
+                <span class="max-sm:hidden">:</span>
+              </p>
+              <p class="text-white max-w-[400px]">{{ playlistStateStr }}
+                @if (playlist.state === 'WATCHED') {
+                  <i class="fa-solid fa-eye text-green-400 text-[13px] ml-1"></i>
+                } @else if (playlist.state === 'WATCHING') {
+                  <i class="fa-solid fa-eye text-yellow-200 text-[13px] ml-1"></i>
+                } @else if (playlist.state == 'NOT_WATCHED') {
+                  <i class="fa-solid fa-eye-slash text-red-400 text-[13px] ml-1"></i>
+                }
+              </p>
+            </div>
+          }
+          @if (playlist.description) {
+            <div class="flex flex-wrap max-sm:flex-col">
+              <p class="text-[#868e96] w-[180px] flex m-0">Descripción
+                <span class="max-sm:hidden">:</span>
+              </p>
+              <p class="text-white max-w-[400px]">{{ playlist.description }}</p>
+            </div>
+          }
+          @if (playlist.ourComment) {
+            <div class="flex flex-wrap max-sm:flex-col">
+              <p class="text-[#868e96] w-[180px] flex m-0">Nuestro comentario
+                <span class="max-sm:hidden">:</span>
+              </p>
+              <p class="text-white max-w-[400px]">{{ playlist.ourComment }}</p>
+            </div>
+          }
+          @if (playlist.starsGlobito) {
+            <div class="flex flex-wrap items-center max-sm:flex-col max-sm:items-start max-sm:justify-center">
+              <p class="text-[#868e96] w-[180px] flex m-0">Globito
+                <span class="max-sm:hidden">:</span>
+              </p>
+              <app-stars [starCount]="5" [rating]="playlist.starsGlobito!" name="rating-globito" (ratingChange)="onRatingGlobitoChange($event)"></app-stars>
+            </div>
+          }
+          @if (playlist.starsKuki) {
+            <div class="flex flex-wrap items-center max-sm:flex-col max-sm:items-start max-sm:justify-center">
+              <p class="text-[#868e96] w-[180px] flex m-0">Kuki
+                <span class="max-sm:hidden">:</span>
+              </p>
+              <app-stars [starCount]="5" [rating]="playlist.starsKuki!" name="rating-kuki" (ratingChange)="onRatingKukiChange($event)"></app-stars>
+            </div>
+          }
+        </div>
+      </div>
+  
+      <!-- Separador -->
+      <span class="block w-full h-[2px] bg-dark-tertiary my-8"></span>
+  
+      <!-- Form -->
+      <div class="flex flex-col items-center w-full pb-6">
+        <h2 class="text-[20px] font-semibold m-0 pb-6">Capítulos</h2>
+        <!-- Search Input -->
+        <app-input styles="search" iconLeft="fas fa-search" placeholder="Buscar..." class="w-full max-w-[360px] max-sm:max-w-full"></app-input>
+      </div>
+  
+      <div class="w-full grid grid-cols-4 max-[1444px]:grid-cols-3 max-[1100px]:grid-cols-2 max-sm:grid-cols-1 gap-x-4 gap-y-6">
+        @for (item of playlist.chapterList; track playlist.orderView) {
+          <div class="h-fit flex flex-col">
+            <div class="relative group flex-grow">
+              <!-- Item -->
+              <a [routerLink]="str(item.chapterNumber)" class="relative block w-full h-full cursor-pointer group">
+
+                <!-- Image -->
+                <div class="h-56 overflow-hidden">
+                  <img class="w-full h-full object-cover rounded-md" [src]="getThumbnailImage(playlist.thumbnail || 'no-have-thumbmail')" alt="">
+                </div>
+                
+                <!-- Número de capítulo -->
+                <div class="size-full flex justify-center items-center z-40 absolute top-0 left-0 group-hover:h-[50%] transition-all duration-500">
+                  <div class="size-12 rounded-[50%] bg-dark-secondary border-2 border-solid border-dark-tertiary flex justify-center items-center">
+                    <span class="text-white text-xl font-semibold">{{ $index + 1 }}</span>
+                  </div>
+                </div>
+              </a>
+
+              <!-- Hover Background -->
+              <div class="absolute inset-0 z-10 bg-black bg-opacity-100 rounded-md flex justify-center items-center opacity-60 group-hover:opacity-0 transition-opacity duration-500 pointer-events-none">
+              </div>
+
+            </div>
+          </div>
+        }
+      </div>
+  
+    </div>
+  } @placeholder {
+    <div class="pt-navbar text-white w-full flex flex-col items-center">
+      <app-spinner></app-spinner>
+    </div>
+  }
 </section>

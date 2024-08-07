@@ -1,0 +1,13 @@
+<div class="bg-section-dark-1 text-white h-[-webkit-fill-available] font-mulish">
+  <div class="mx-8 mt-8">
+    <h2 class="mb-4 p-0 text-[24px] font-semibold">{{ data.title }}</h2>
+    <p class="mb-6">{{ data.text }}</p>
+  </div>
+  <!-- border-top: 1px solid #1a1b1e; -->
+  <div class="w-full flex justify-end items-center gap-3 bg-section-dark-2 p-4 text-[15px] border-t border-solid border-[#1a1b1e]">
+    <button class="px-3 py-1 rounded-sm" (click)="onCancel()">Cancelar</button>
+    <button class="px-3 py-1 bg-red-500 rounded-sm hover:bg-red-400 transition-colors duration-500 ease-in-out" (click)="onConfirm()">
+      <i class="{{data.confirmIcon}} mr-1"></i> {{ data.confirmText }}
+    </button>
+  </div>
+</div>

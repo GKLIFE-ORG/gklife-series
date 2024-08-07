@@ -1,62 +1,105 @@
 <app-navbar></app-navbar>
-<section class="min-h-dvh h-auto bg-section-dark-1 py-[5%] px-[10%] max-2xl:px-[5%] max-md:px-[5%] font-mulish">
-  <div class="pt-navbar flex flex-col items-center gap-10 max-sm:gap-5">
+<section class="min-h-dvh h-auto bg-section-dark-1 py-[3.5%] max-lg:py-[5%] px-[10%] max-2xl:px-[5%] max-md:px-[5%] font-mulish">
+  <div class="pt-navbar text-white">
 
-    <!-- Search Input -->
-    <app-input styles="search" iconLeft="fas fa-search" placeholder="Buscar..."></app-input>
+    <h1 class="w-full text-[24px] font-semibold max-sm:text-center mb-6">
+      Series
+    </h1>
 
-    <!-- Create Playlist -->
-    <button class="text-white" (click)="openCreateDialog()">Nueva Playlist</button>
+    <!-- Form -->
+    <div class="flex gap-2 mb-10 max-sm:mb-8 max-sm:flex-col">
+      <!-- Search Input -->
+      <app-input styles="search" iconLeft="fas fa-search" placeholder="Buscar..." class="w-full max-w-[360px] max-sm:max-w-full"></app-input>
 
-    <div class="w-full grid grid-cols-4 max-[1444px]:grid-cols-3 max-[1100px]:grid-cols-2 max-sm:grid-cols-1 gap-x-4 gap-y-6">
-      @for (playlist of playlists; track playlist.orderView) {
-        <div class="h-fit">
-          <div class="relative group">
-            <a [routerLink]="playlist.fullName" class="block w-full h-full cursor-pointer">
-              <!-- Image -->
-              <img class="w-full h-full rounded-md" [src]="getThumbnailImage(playlist.thumbnail || 'no-have-thumbmail')" alt="">
-              <!-- Number of Order View -->
-              <p class="absolute top-2 right-2 bg-black bg-opacity-50 rounded-md px-2 py-1 text-white text-[13px] font-mulish font-[600]">
-                @if (playlist.orderView) {
-                  {{ playlist.orderView }}
-                } @else {
-                  ?
-                }
-              </p>
-            </a>
-            <!-- Hover Image -->
-            <div class="absolute inset-0 z-10 bg-black bg-opacity-50 rounded-md flex justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-              <i class="fa-solid fa-play-circle text-white text-4xl"></i>
-              <!-- Options -->
-              <div class="absolute bottom-2 right-2 z-20 flex space-x-1">
-                <button class="btn-with-icon" (click)="openEditDialog(playlist)">
-                  <i class="fa-solid fa-edit"></i>
+      <div class="w-full h-12 flex items-center gap-1 max-sm:gap-2">
+        <!-- Create Playlist -->
+        <button class="size-12 max-sm:size-full bg-dark-secondary border-2 border-solid border-dark-tertiary group" (click)="openCreateDialog()">
+          <i class="fa-solid fa-plus transition-all duration-500 ease-in-out group-hover:rotate-180 group-hover:text-primary"></i>
+        </button>
+        <!-- Filtro -->
+        <button class="size-12 max-sm:size-full bg-dark-secondary border-2 border-solid border-dark-tertiary group" (click)="openFilterDialog()">
+          <i class="fa-solid fa-filter transition-all duration-500 ease-in-out group-hover:scale-[1.1] group-hover:text-primary"></i>
+        </button>
+      </div>
+    </div>
+
+    @defer (when !isLoading) {
+      <!-- Series -->
+      <div class="w-full grid grid-cols-4 max-[1444px]:grid-cols-3 max-[1100px]:grid-cols-2 max-sm:grid-cols-1 gap-x-4 gap-y-6">
+        @for (playlist of playlists; track playlist.orderView) {
+          <div class="h-fit flex flex-col">
+            <div class="relative group flex-grow">
+              <a [routerLink]="playlist.fullName" class="block w-full h-full cursor-pointer">
+
+                <!-- Image -->
+                <div class="h-56 overflow-hidden">
+                  <img class="w-full h-full object-cover rounded-md" [src]="getThumbnailImage(playlist.thumbnail || 'no-have-thumbmail')" alt="">
+                </div>
+                
+                <!-- Number of Order View -->
+                <p class="absolute top-0 left-0 z-30 space-x-1 bg-black bg-opacity-50 rounded-md rounded-bl-none rounded-tr-none px-2 py-1 text-white text-[13px] font-mulish font-[600]">
+                  @if (playlist.orderView) {
+                    {{ playlist.orderView }}
+                  } @else {
+                    ?
+                  }
+                </p>
+
+                <!-- View -->
+                <button class="btn-with-icon absolute top-0 right-0 z-30 space-x-1 !rounded-br-none !rounded-tl-none hover:!bg-black hover:!bg-opacity-50">
+                  @if (playlist.state === 'WATCHED') {
+                    <i class="fa-solid fa-eye text-green-400"></i>
+                  } @else if (playlist.state === 'WATCHING') {
+                    <i class="fa-solid fa-eye text-yellow-200"></i>
+                  } @else if (playlist.state == 'NOT_WATCHED') {
+                    <i class="fa-solid fa-eye-slash text-red-400"></i>
+                  }
                 </button>
-                <button class="btn-with-icon" (click)="deletePlaylist(playlist.fullName)">
-                  <i class="fa-solid fa-trash"></i>
-                </button>
-                @if (playlist.playlistLink) {
-                  <a [href]="playlist.playlistLink" target="_blank" class="btn-with-icon yt">
-                    <i class="fa-brands fa-youtube"></i>
-                  </a>
-                }
+                
+              </a>
+              <!-- Hover Image -->
+              <div class="absolute inset-0 z-10 bg-black bg-opacity-50 rounded-md flex justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                <i class="fa-solid fa-play-circle text-white text-4xl"></i>
+                <div class="absolute bottom-2 right-2 z-20 flex space-x-1">
+                  <button class="btn-with-icon" (click)="updatePlaylistState(playlist)">
+                    @if (playlist.state === 'WATCHED') {
+                      <i class="fa-solid fa-eye"></i>
+                    } @else if (playlist.state === 'WATCHING') {
+                      <i class="fa-solid fa-eye"></i>
+                    } @else if (playlist.state == 'NOT_WATCHED') {
+                      <i class="fa-solid fa-eye-slash"></i>
+                    }
+                  </button>
+                  <button class="btn-with-icon" (click)="openEditDialog(playlist)">
+                    <i class="fa-solid fa-edit"></i>
+                  </button>
+                  <button class="btn-with-icon" (click)="deletePlaylist(playlist.fullName)">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                  @if (playlist.playlistLink) {
+                    <a [href]="playlist.playlistLink" target="_blank" class="btn-with-icon yt">
+                      <i class="fa-brands fa-youtube"></i>
+                    </a>
+                  }
+                </div>
+
               </div>
             </div>
+            @if (playlist.startViewingDate && playlist.endViewingDate) {
+              <div class="flex justify-between items-center text-gray-400 text-sm mt-2">
+                <p>{{ changeDateFormat(playlist.startViewingDate) }}</p>
+                <p>{{changeDateFormat(playlist.endViewingDate)}}</p>
+              </div>
+            } @else {
+              <p class="text-gray-400 text-sm mt-2">No hay fechas de visualización</p>
+            }
+            <p class="text-white">{{ playlist.realName }}</p>
           </div>
-          @if (playlist.startViewingDate && playlist.endViewingDate) {
-            <div class="flex justify-between items-center text-gray-400 text-sm mt-2">
-              <p>{{ changeDateFormat(playlist.startViewingDate) }}</p>
-              <p>{{changeDateFormat(playlist.endViewingDate)}}</p>
-            </div>
-          } @else {
-            <p class="text-gray-400 text-sm mt-2">No hay fechas de visualización</p>
-          }
-          <p class="text-white">{{ playlist.realName }}</p>
-        </div>
-      }
-    </div>
-    
-    
-    <!-- <app-yt-video-embed ytId="qOncNX5Q4j0"></app-yt-video-embed> -->
+        }
+        <!-- <app-yt-video-embed ytId="6t4OVvv7JPI"></app-yt-video-embed> -->
+      </div>
+    } @placeholder {
+      <app-spinner></app-spinner>
+    }
   </div>
 </section>

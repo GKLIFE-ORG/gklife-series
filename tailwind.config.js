@@ -6,9 +6,12 @@ module.exports = {
     extend: {
       colors: {
         "primary": "#47c9ff",
-        "section-dark-0": "#141414",
         "section-dark-1": "#2D2F34",
-        "section-dark-2": "#1d1d1d",
+        "section-dark-2": "#222327",
+
+        "dark-primary": "#2D2F34",
+        "dark-secondary": "#1F2124",
+        "dark-tertiary": "#44464A",
       },
       height: {
         navbar: "80px", // navbar height
