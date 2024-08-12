@@ -25,11 +25,14 @@ export class AuthService {
       if (response.token && response.message) {
         localStorage.setItem('token', response.token);
         this.awnService.success(response.message);
+      } else {
+        console.error('Error logging in:', response.message);
       }
 
       return response;
     } catch (error: any) {
       this.awnService.alert(error.error.message);
+      console.error('Error logging in:', error);
       throw error.error.message;
     }
   }
