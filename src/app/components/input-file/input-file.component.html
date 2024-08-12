@@ -1,0 +1,43 @@
+<div class="relative">
+  <div class="h-full flex flex-col gap-1">
+    <!-- Etiqueta -->
+    @if (label && label !== '') {
+      <div class="text-[15px] text-[#bcbec2] flex items-center gap-2">
+        <label [for]="inputId">{{ label }}</label>
+        @if (value && link) {
+          <a [href]="link" target="_blank">
+            <i class="fa-solid fa-up-right-from-square text-[10px] text-primary"></i>
+          </a>
+        }
+      </div>
+    }
+
+    @if (!onlyIcon) {
+      <div class="relative">    
+        <!-- Campo de entrada -->
+        <input [id]="inputId" type="file" [tabIndex]="tabIndex" class="input input-alt"(change)="onFileChange($event)">
+    
+        <!-- Vista previa de la imagen -->
+        @if (imagePreview && imagePreview !== '') {
+          <div class="mt-2">
+            <img [src]="imagePreview" alt="Vista previa" class="rounded-md max-w-full h-auto object-cover"/>
+          </div>
+        } @else {
+          <div class="mt-2">
+            <img src="assets/imgs/no-have-thumbmail.png" alt="Vista previa" class="rounded-md max-w-full h-auto object-cover"/>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="relative input input-alt flex justify-center items-center size-12">
+        <!-- Icono izquierdo -->
+        @if (icon && icon !== '') {
+          <i [ngClass]="icon" class="text-[#fff] transition-all duration-500 ease-in-out group-hover:text-blue-400"></i>
+        }
+        <!-- Campo de entrada -->
+        <input [id]="inputId" type="file" [tabIndex]="tabIndex" class="size-12 absolute text-transparent cursor-pointer" (change)="onFileChange($event)">
+      </div>
+    }
+
+  </div>
+</div>

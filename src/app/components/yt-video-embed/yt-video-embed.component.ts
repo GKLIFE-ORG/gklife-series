@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
@@ -15,6 +15,16 @@ export class YtVideoEmbedComponent {
   constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
+    this.updateVideoUrl();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['ytId']) {
+      this.updateVideoUrl();
+    }
+  }
+
+  private updateVideoUrl() {
     this.mainSrcOption = this.sanitizer.bypassSecurityTrustResourceUrl(
       `https://www.youtube.com/embed/${this.ytId}`
     );

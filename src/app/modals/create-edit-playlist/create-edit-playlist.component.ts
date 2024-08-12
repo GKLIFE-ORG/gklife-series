@@ -18,11 +18,22 @@ import { Router } from '@angular/router';
 import { AwesomeNotificationsService } from '../../services/awesome-notifications.service';
 import { SearchService } from '../../services/search.service';
 import { InputTimeComponent } from '../../components/input-time/input-time.component';
+import { Dialog, DialogModule } from '@angular/cdk/dialog';
+import { environment } from '../../../environments/environment';
+import { InputFileComponent } from '../../components/input-file/input-file.component';
 
 @Component({
   selector: 'app-create-edit-playlist',
   standalone: true,
-  imports: [CommonModule, FormsModule, InputComponent, InputTimeComponent, StarsComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    InputComponent,
+    InputTimeComponent,
+    InputFileComponent,
+    StarsComponent,
+    DialogModule,
+  ],
   templateUrl: './create-edit-playlist.component.html',
   styleUrl: './create-edit-playlist.component.scss',
 })
@@ -32,6 +43,8 @@ export class CreateEditPlaylistComponent implements OnChanges {
   playlistDTO: PlaylistDTO;
   thumbnailFile: File | null = null;
   isEdit: boolean = false;
+
+  isProduction: boolean = environment.PRODUCTION;
 
   newChapters: ChapterDTO[] = [];
   localChapters: ChapterDTO[] = [];
@@ -50,7 +63,8 @@ export class CreateEditPlaylistComponent implements OnChanges {
     public data: { playlist: PlaylistDTO; newOrderView: number },
     private playlistService: PlaylistService,
     private searchService: SearchService,
-    private notificationService: AwesomeNotificationsService
+    private notificationService: AwesomeNotificationsService,
+    private dialog: Dialog
   ) {
     this.notificationService.configNotifications();
 
@@ -67,6 +81,14 @@ export class CreateEditPlaylistComponent implements OnChanges {
   ngOnInit() {
     if (this.isEdit) {
       this.playlistDTO.state = this.convertState(this.playlistDTO.state);
+
+      // Asegurarse de que el thumbnail sea una URL válida
+      if (
+        this.playlistDTO.thumbnail &&
+        !this.playlistDTO.thumbnail.startsWith('data:image')
+      ) {
+        this.playlistDTO.thumbnail = `data:image/png;base64,${this.playlistDTO.thumbnail}`;
+      }
     } else {
       this.playlistDTO.state = StateEnum.WATCHED;
     }
@@ -77,15 +99,21 @@ export class CreateEditPlaylistComponent implements OnChanges {
   }
 
   private secondsToHMS(seconds: number): string {
-    const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
-    const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
-    const s = Math.floor(seconds % 60).toString().padStart(2, '0');
+    const h = Math.floor(seconds / 3600)
+      .toString()
+      .padStart(2, '0');
+    const m = Math.floor((seconds % 3600) / 60)
+      .toString()
+      .padStart(2, '0');
+    const s = Math.floor(seconds % 60)
+      .toString()
+      .padStart(2, '0');
     return `${h}:${m}:${s}`;
   }
 
   private hmsToSeconds(hms: string): number {
     const [hours, minutes, seconds] = hms.split(':').map(Number);
-    return (hours * 3600) + (minutes * 60) + (seconds || 0);
+    return hours * 3600 + minutes * 60 + (seconds || 0);
   }
 
   convertState(state: StateEnum | string | undefined): StateEnum {
@@ -170,6 +198,13 @@ export class CreateEditPlaylistComponent implements OnChanges {
 
     this.playlistDTO.chapterList = this.localChapters;
 
+    if (this.playlistDTO.thumbnail) {
+      this.playlistDTO.thumbnail = this.playlistDTO.thumbnail.replace(
+        'data:image/png;base64,',
+        ''
+      );
+    }
+
     console.log('Submitting playlistDTO:', this.playlistDTO);
 
     if (this.isEdit) {
@@ -179,19 +214,32 @@ export class CreateEditPlaylistComponent implements OnChanges {
     }
   }
 
-  public onAutomatizate() {
+  public automatizate() {
     const automatePromise = this.searchService
-      .automatePlaylist(this.playlistDTO.playlistLink ? this.playlistDTO.playlistLink : 'not-found')
+      .automatePlaylist(
+        this.playlistDTO.playlistLink
+          ? this.playlistDTO.playlistLink
+          : 'not-found'
+      )
       .then((playlistData) => {
         // Actualizar solo los campos específicos
-        this.playlistDTO.realName = playlistData.realName || this.playlistDTO.realName;
-        this.playlistDTO.fullName = playlistData.fullName || this.playlistDTO.fullName;
-        this.playlistDTO.shortName = playlistData.shortName || this.playlistDTO.shortName;
-        this.playlistDTO.orderView = playlistData.orderView !== undefined ? playlistData.orderView : this.playlistDTO.orderView;
+        this.playlistDTO.realName =
+          playlistData.realName || this.playlistDTO.realName;
+        this.playlistDTO.fullName =
+          playlistData.fullName || this.playlistDTO.fullName;
+        this.playlistDTO.shortName =
+          playlistData.shortName || this.playlistDTO.shortName;
+        this.playlistDTO.orderView =
+          playlistData.orderView !== undefined
+            ? playlistData.orderView
+            : this.playlistDTO.orderView;
         this.playlistDTO.playlistLink = playlistData.playlistLink;
         this.playlistDTO.state = playlistData.state; // Siempre actualizar el estado
-        this.playlistDTO.chapters = playlistData.chapters !== undefined ? playlistData.chapters : this.playlistDTO.chapters;
-        
+        this.playlistDTO.chapters =
+          playlistData.chapters !== undefined
+            ? playlistData.chapters
+            : this.playlistDTO.chapters;
+
         this.localChapters = playlistData.chapterList || [];
         this.newChapters = [];
       });
@@ -200,6 +248,66 @@ export class CreateEditPlaylistComponent implements OnChanges {
       automatePromise,
       'Buscando información...'
     );
+  }
+
+  public exportAsJson() {
+    this.playlistDTO.thumbnail = this.playlistDTO.thumbnail?.replace(
+      'data:image/png;base64,',
+      ''
+    );
+
+    const dataStr = JSON.stringify(this.playlistDTO, null, 2);
+    const dataUri =
+      'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+    const exportFileName = `${this.playlistDTO.fullName}-data_${this.getFormattedDateTime()}.json`;
+
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileName);
+    linkElement.click();
+  }
+
+  public importAsJson(file: File) {
+    const fileName = file.name.toLowerCase();
+
+    // Verifica si el archivo tiene extensión .json
+    if (!fileName.endsWith('.json')) {
+      this.notificationService.alert('Debes importar un JSON');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      try {
+        const jsonData = JSON.parse(e.target.result);
+        this.playlistDTO = jsonData;
+        this.localChapters = this.playlistDTO.chapterList || [];
+
+        // Verifica si el JSON tiene un thumbnail y lo asigna a la variable correspondiente
+        if (this.playlistDTO.thumbnail) {
+          this.playlistDTO.thumbnail = `data:image/png;base64,${this.playlistDTO.thumbnail}`;
+        }
+
+        this.notificationService.info('Datos importados correctamente');
+      } catch (error) {
+        this.notificationService.alert('Error al analizar el JSON');
+        console.error('Error parsing JSON', error);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  // Método para obtener la fecha y hora formateada
+  private getFormattedDateTime(): string {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    return `${year}${month}${day}_${hours}${minutes}${seconds}`;
   }
 
   private createPlaylist() {
@@ -265,7 +373,6 @@ export class CreateEditPlaylistComponent implements OnChanges {
   }
 
   close() {
-    console.log('hola');
   }
 
   public onRealNameChange(value: string, valueFromChange: string) {
@@ -283,7 +390,29 @@ export class CreateEditPlaylistComponent implements OnChanges {
   }
 
   private formatFullName(value: string): string {
-    return value.toLowerCase().replace(/\s+/g, '-');
+    const accentsMap: { [key: string]: string } = {
+      á: 'a',
+      é: 'e',
+      í: 'i',
+      ó: 'o',
+      ú: 'u',
+      Á: 'A',
+      É: 'E',
+      Í: 'I',
+      Ó: 'O',
+      Ú: 'U',
+      ñ: 'n',
+      Ñ: 'N',
+    };
+  
+    // Primero reemplaza los acentos
+    value = value.replace(/[áéíóúÁÉÍÓÚñÑ]/g, (match) => accentsMap[match]);
+
+    value = value.toLowerCase();
+    value = value.replace(/\s+/g, '-');
+    value = value.replace(/[^a-z0-9-]/g, '');
+
+    return value;
   }
 
   private formatRealName(value: string): string {

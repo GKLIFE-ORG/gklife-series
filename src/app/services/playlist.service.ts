@@ -29,6 +29,14 @@ export class PlaylistService {
     this.loadPlaylists();
   }
 
+  setPlaylistData(data: PlaylistDTO) {
+    this.playlistSubject.next(data);
+  }
+
+  getPlaylistData(): PlaylistDTO | null {
+    return this.playlistSubject.value;
+  }
+
   public refreshPlaylists() {
     this.loadPlaylists();
   }

@@ -45,6 +45,9 @@ export class PlaylistComponent {
           this.playlist = playlist;
           this.changeStateName();
           this.isLoading = false;
+
+          // Establecer los datos de la playlist en el servicio compartido
+          this.playlistService.setPlaylistData(this.playlist);
         } else {
           this.isLoading = true;
         }

@@ -13,22 +13,41 @@
   <span class="block w-full h-[2px] bg-dark-tertiary my-8"></span>
   
   <!-- Automatización -->
-  <div (ngSubmit)="onAutomatizate()" class="px-8 max-[444px]:px-6">
+  <div class="px-8 max-[444px]:px-6">
     
     <!-- Título de Sección -->
     <h2 class="text-[20px] max-md:text-[18px] font-semibold m-0 pb-6">Automatización</h2>
 
     <!-- Información -->
-    <div class="w-full flex justify-center items-end gap-2">
-      <!-- Nombre real -->
+    <div class="w-full flex justify-center items-end gap-2 max-md:flex-col">
+
+      <!-- Link de la Playlist -->
       <app-input class="w-full" [(ngModel)]="playlistDTO.playlistLink" [tabIndex]="1" name="playlistLink" label="Link de la playlist en YouTube"
         iconLeft="fa-brands fa-youtube" placeholder="Aproximadamente 20 segundos...">
       </app-input>
-    
-      <button (click)="onAutomatizate()" class="size-12 bg-dark-secondary border-2 border-solid border-dark-tertiary
-        group flex-shrink-0 flex-grow-0 basis-auto" [tabIndex]="2">
-        <i class="fa-solid fa-hammer transition-all duration-500 ease-in-out group-hover:text-primary"></i>
+
+      <div class="flex justify-center items-center gap-1 max-md:w-full max-md:gap-2">
+      
+      @if (!isProduction) {
+        <!-- Automatizar -->
+        <button (click)="automatizate()" class="size-12 bg-dark-secondary border-2 border-solid border-dark-tertiary
+          group flex-shrink-0 flex-grow-0 max-md:flex-shrink max-md:flex-grow basis-auto" [tabIndex]="2">
+          <i class="fa-solid fa-hammer transition-all duration-500 ease-in-out group-hover:text-primary"></i>
+        </button>
+      }
+
+      <!-- Exportar -->
+      <button (click)="exportAsJson()" class="size-12 bg-dark-secondary border-2 border-solid border-dark-tertiary
+        group flex-shrink-0 flex-grow-0 max-md:flex-shrink max-md:flex-grow basis-auto" [tabIndex]="3">
+        <i class="fa-solid fa-file-export transition-all duration-500 ease-in-out group-hover:text-green-400"></i>
       </button>
+
+      <!-- Importar -->
+      <app-input-file (fileSelected)="importAsJson($event)" class="group flex-shrink-0 flex-grow-0 max-md:flex-shrink max-md:flex-grow basis-auto"
+        icon="fa-solid fa-file-import" [onlyIcon]="true" [tabIndex]="9">
+      </app-input-file>
+      </div>
+
     </div>
 
   </div>
@@ -75,9 +94,9 @@
       </app-input>
 
       <!-- Imagen -->
-      <app-input (change)="onFileSelected($event)" class="col-span-2 max-md:col-span-1"
-        type="file" name="image" label="Imagen de portada" iconLeft="fa-solid fa-image" placeholder="Seleccionar imagen" [tabIndex]="9">
-      </app-input>
+      <app-input-file (change)="onFileSelected($event)" class="col-span-2 max-md:col-span-1" [imagePreview]="playlistDTO.thumbnail!"
+        name="image" label="Imagen de portada" placeholder="Seleccionar imagen" [tabIndex]="9">
+      </app-input-file>
 
       <!-- Fecha de Inicio -->
       <app-input [(ngModel)]="playlistDTO.startViewingDate"
