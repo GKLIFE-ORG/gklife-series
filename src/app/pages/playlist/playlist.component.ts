@@ -71,6 +71,7 @@ export class PlaylistComponent {
 
   ngOnDestroy() {
     this.subscriptions.unsubscribe();
+    this.playlistService.destroyPlaylistData();
   }
 
   str(str: number): string {

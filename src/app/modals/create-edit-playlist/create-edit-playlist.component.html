@@ -32,19 +32,19 @@
         <!-- Automatizar -->
         <button (click)="automatizate()" class="size-12 bg-dark-secondary border-2 border-solid border-dark-tertiary
           group flex-shrink-0 flex-grow-0 max-md:flex-shrink max-md:flex-grow basis-auto" [tabIndex]="2">
-          <i class="fa-solid fa-hammer transition-all duration-500 ease-in-out group-hover:text-primary"></i>
+          <i class="fa-solid fa-wand-magic-sparkles transition-all duration-500 ease-in-out group-hover:text-primary"></i>
         </button>
       }
-
+      
       <!-- Exportar -->
       <button (click)="exportAsJson()" class="size-12 bg-dark-secondary border-2 border-solid border-dark-tertiary
         group flex-shrink-0 flex-grow-0 max-md:flex-shrink max-md:flex-grow basis-auto" [tabIndex]="3">
-        <i class="fa-solid fa-file-export transition-all duration-500 ease-in-out group-hover:text-green-400"></i>
+        <i class="fa-solid fa-file-arrow-down transition-all duration-500 ease-in-out group-hover:text-green-400"></i>
       </button>
 
       <!-- Importar -->
       <app-input-file (fileSelected)="importAsJson($event)" class="group flex-shrink-0 flex-grow-0 max-md:flex-shrink max-md:flex-grow basis-auto"
-        icon="fa-solid fa-file-import" [onlyIcon]="true" [tabIndex]="9">
+        icon="fa-solid fa-file-arrow-up" [onlyIcon]="true" [tabIndex]="9">
       </app-input-file>
       </div>
 

@@ -37,6 +37,10 @@ export class PlaylistService {
     return this.playlistSubject.value;
   }
 
+  public destroyPlaylistData() {
+    this.playlistSubject.next(null);
+  }
+
   public refreshPlaylists() {
     this.loadPlaylists();
   }
